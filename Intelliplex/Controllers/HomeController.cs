@@ -12,6 +12,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.ProjectOxford.Vision;
+using Microsoft.ApplicationInsights;
 
 namespace Intelliplex.Controllers
 {
@@ -65,15 +66,24 @@ namespace Intelliplex.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
+            ViewBag.Message = "Oops" + CauseAnError();
             return View();
+        }
+
+        private int CauseAnError()
+        {
+            // Force an unhandled exception
+            System.Diagnostics.Trace.TraceWarning("Something bad is about to happen.");
+            var numerator = 0;
+            var denominator = 0;
+            return numerator / denominator;
         }
 
         public ActionResult Contact()
         {
+            var client = new TelemetryClient();
+            client.TrackEvent("Contact Information Was Requested");
             ViewBag.Message = "Your contact page.";
-
             return View();
         }
         [HttpPost]
